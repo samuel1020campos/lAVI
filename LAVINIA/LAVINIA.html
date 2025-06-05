@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Juros Compostos</title>
+    <style>
+        /* Estilo geral para o corpo */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1e4ea;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Container do formulário */
+        .countainer {
+            background-color: rgb(255, 169, 194);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgb(154, 21, 87);
+            margin-top: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        /* Estilo dos inputs e botão */
+        input[type="text"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 300px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #cc0096;
+            color: rgb(255, 255, 255);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #890550;
+        }
+        
+        /* Resultado (tabela) */
+        #resultado {
+            width: 100%;
+            max-width: 700px;
+            margin: 30px auto;
+            overflow-x: auto;
+        }
+        
+        .tabela-juros {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tabela-juros th, .tabela-juros td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .tabela-juros thead {
+            background-color: #e675d1;
+            color: white;
+        }
+        
+        .tabela-juros tbody tr:nth-child(even) {
+            background-color: #ea93d1;
+        }
+        
+        .tabela-juros tbody tr:hover {
+            background-color: #e0f7fa;
+        }
+
+        h1 {
+            color: #6a0dad;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #6a0dad;
+        }
+    </style>
+</head>
+<body>
+    <form id="idform">
+        <div class="countainer">
+            <h1>Calculadora Juros Compostos</h1>  
+            <label for="montante">Montante Inicial (R$)</label>
+            <input type="text" placeholder="Digite o Montante" id="montante" required>
+            <label for="juros">Taxa de Juros (% ao mês)</label>
+            <input type="text" placeholder="Digite a taxa de juros" id="juros" required>
+            <label for="tempo">Período (meses)</label>
+            <input type="text" placeholder="Digite o tempo em meses" id="tempo" required>
+            <button type="submit">Calcular</button>
+        </div>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById("idform").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const capital = parseFloat(document.getElementById("montante").value);
+            const juros = parseFloat(document.getElementById("juros").value) / 100;
+            const meses = parseInt(document.getElementById("tempo").value);
+
+            let saldo = capital;
+
+            let resultadoHTML = `
+            <table class="tabela-juros">
+                <thead> 
+                    <tr>
+                        <th>Mês</th>
+                        <th>Saldo Inicial (R$)</th>
+                        <th>Juros (R$)</th>
+                        <th>Saldo Final (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            for (let mes = 1; mes <= meses; mes++) { 
+                let saldoinicial = saldo;
+                let jurosMes = saldoinicial * juros;
+                saldo = saldoinicial + jurosMes;
+
+                resultadoHTML += `
+                    <tr>
+                        <td>${mes}</td>
+                        <td>${saldoinicial.toFixed(2)}</td>
+                        <td>${jurosMes.toFixed(2)}</td>
+                        <td>${saldo.toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+
+            resultadoHTML += `</tbody></table>`;
+            document.getElementById("resultado").innerHTML = resultadoHTML;
+        });
+    </script>
+</body>
+</html>
